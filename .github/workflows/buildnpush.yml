@@ -1,0 +1,26 @@
+name: Docker Build and Push  # Defines the name of the workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  buildnpush:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Docker Hub Login
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build the Docker Image
+        run: docker build -t first_project:latest .
+
+      - name: Tag the Image
+        run: docker tag first_project:latest "${{ secrets.DOCKERHUB_USERNAME }}/first_project:latest"
+
+      - name: Push the Image
+        run: docker push "${{ secrets.DOCKERHUB_USERNAME }}/first_project:latest"
