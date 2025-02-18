@@ -1,30 +1,22 @@
-version: '3.8'
+name: First App System
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    depends_on:
-      - mongo
-    environment:
-      - MONGO_URI=mongodb://mongo:27017/mydatabase
-      - DB_NAME=my_database
+      - 3000:3000
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - my_own_network
+  db:
+    image: mongo:latest
     networks:
       - my_own_network
 
-  mongo:
-    image: mongo
-    container_name: my_mongo_container
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_DATABASE: mydatabase 
-    networks:
-      - my_own_network
-
-networks :
-  my_own_network :
-  
-volumes :
-  mongo-data :
+networks:
+  my_own_network:
+    driver: bridge
