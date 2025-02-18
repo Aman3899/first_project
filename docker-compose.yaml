@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydatabase
+      - DB_NAME=my_database
+    networks:
+      - my_own_network
+
+  mongo:
+    image: mongo
+    container_name: my_mongo_container
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: mydatabase 
+    networks:
+      - my_own_network
+
+networks :
+  my_own_network :
+  
+volumes :
+  mongo-data :
